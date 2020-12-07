@@ -23,3 +23,13 @@ Route::post('/create', 'UserController@createUser');
 Route::get('/update-points/{id}/{modifier}', 'UserController@updatePoints');
 Route::get('/get-user/{id}', 'UserController@getUser');
 Route::delete('/delete-user/{id}', 'UserController@deleteUser');
+
+
+Route::prefix('user')->group(function () {
+    Route::namespace('User')->group(function () {
+        // Controllers Within The "App\Http\Controllers\User" Namespace
+        Route::post('login', 'UserController@login');
+        Route::post('authenticate', 'DashboardLoginController@authenticate');
+        Route::post('register', 'UserController@register');
+    });
+});
