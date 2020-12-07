@@ -1,57 +1,56 @@
 ## User listing
 
-### Endpoint: http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/leaderboard
+### Endpoint: http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/leaderboard (GET)
+
+This API is to return a list of users order by their score in a descending order. 
 
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Get specific user
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Endpoint: http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/get-user/{id} (GET)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This API is to return a single user base on the user id provided.
 
-## Learning Laravel
+examples:
+- http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/get-user/1
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Create user
 
-### Premium Partners
+### Endpoint: http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/create (POST)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+This API is to create an user with the following parameters:
+- name
+- age
+- address
 
-## Contributing
+In postman, please use form-data to provide key value pair.
+points will be default to 0 upon user creation.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Update points
 
-## Security Vulnerabilities
+### Endpoint: http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/update-points/{id}/{modifier} (GET)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+This API is to update scores according provided user id and modifier.
 
-## License
+exemples:
+ - http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/update-points/1/+  will add 1 point to user id 1
+ - http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/update-points/1/-  will minus 1 point from user id 1
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Each action (+ or -) will only add or deduct 1 point from an user.
+
+
+
+## Delete User
+
+### Endpoint: http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/delete-user/{id} (DELETE)
+
+This API is to delete an user base on the user id provided.
+
+examples:
+- http://ec2-52-42-253-146.us-west-2.compute.amazonaws.com/api/delete-user/1
