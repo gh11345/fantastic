@@ -3,13 +3,22 @@ import VueRouter from 'vue-router';
 const routes = [
     {
         path: '/',
-        name: 'dashboard',
         component: require('./components/app.vue').default,
         children: [
             {
-                path: '/',
+                path: '/home',
                 name: 'home',
                 component: require('./components/content.vue').default
+            },
+            {
+                path: '/content2',
+                name: 'content2',
+                component: require('./components/content2.vue').default
+            },
+            {
+                path: '/products',
+                name: 'products',
+                component: require('./components/productListing.vue')
             }
         ]
     },

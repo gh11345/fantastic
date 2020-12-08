@@ -29,7 +29,16 @@ Route::prefix('user')->group(function () {
     Route::namespace('User')->group(function () {
         // Controllers Within The "App\Http\Controllers\User" Namespace
         Route::post('login', 'UserController@login');
-        Route::post('authenticate', 'DashboardLoginController@authenticate');
+        Route::post('authenticate', 'UserController@authenticate');
         Route::post('register', 'UserController@register');
+    });
+});
+
+Route::middleware('ApiAuthenticator')->group(function () {
+    Route::prefix('record')->group(function () {
+        Route::namespace('Records')->group(function () {
+            Route::post('create', 'RecordController@create');
+            Route::get('get', 'RecordController@get');
+        });
     });
 });

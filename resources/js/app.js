@@ -3,10 +3,15 @@ import Vue from 'vue'
 import VueSession from 'vue-session';
 import VueRouter from 'vue-router';
 import VueCookie from 'vue-cookie';
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+
 import App from './components/app.vue'
 window.jQuery = window.$ = require('jquery');
 window.axios = require('axios');
 
+Vue.use(VueMaterial)
 Vue.use(VueRouter);
 Vue.use(VueSession);
 Vue.use(VueCookie);
@@ -21,13 +26,17 @@ Vue.use(VueCookie);
 const routes = [
     {
         path: '/',
-        name: 'dashboard',
         component: require('./components/app.vue').default,
         children: [
             {
                 path: '/',
                 name: 'home',
                 component: require('./components/content.vue').default
+            },
+            {
+                path: '/products',
+                name: 'products',
+                component: require('./components/productListing.vue').default
             }
         ]
     },

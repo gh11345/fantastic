@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    const LOGIN_EXPIRE_TIME = 30;
+    const LOGIN_EXPIRE_TIME = 60;
 
     public function index()
     {
@@ -76,32 +76,34 @@ class UserController extends Controller
     }
 
     /**
-     * @param $user
-     * @return string
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function resetSession($user)
+    public function authenticate(Request $request)
     {
-        $userAccount = User::where('email', '=', $user['email'])->first();
-        $userId = $userAccount->id;
-        $currentTime = Carbon::now()->toDateTimeString();
-        $securityCode = $user['cookie'];
-        $param = $this->sessionManagement->getSession($securityCode);
-        if(!empty($user['cookie']) && !empty($param)) {
-            $param = json_decode($param,true);
-            $param['login_time'] = $currentTime;
-            $param['status'] = 'active';
-            $sessionData = json_encode($param);
+        $token = $request->header('auth');
+        $user = User::where('remember_token', '=', $token)->first();
+
+        if (!empty($user)) {
+            $updateAt = $user['updated_at'];
+            $currentTime = Carbon::now()->toDateTimeString();
+            $start = strtotime($updateAt);
+            $end = strtotime($currentTime);
+            $timeDiff = round(($end - $start) / 60);
+
+            if ($timeDiff <= self::LOGIN_EXPIRE_TIME) {
+                return response()->json([
+                    'auth' => 'valid'
+                ], 200);
+            } else {
+                return response()->json([
+                    'auth' => 'invalid'
+                ], 200);
+            }
         } else {
-            $sessionId = Uuid::generate()->string;
-            $securityCode = $sessionId;
-            $param = [
-                'login_time' => $currentTime,
-                'id' => $userId,
-                'status'=>'active'
-            ];
-            $sessionData = json_encode($param);
+            return response()->json([
+                'auth' => 'invalid'
+            ], 200);
         }
-        $this->sessionManagement->setSession($securityCode, $sessionData);
-        return $securityCode;
     }
 }

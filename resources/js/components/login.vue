@@ -34,7 +34,7 @@
                 }.bind(this));
             },
             login() {
-                
+
                 if(this.username != "" && this.password != "") {
                     axios({
                         method: 'post',
@@ -47,7 +47,8 @@
                     }).then( function (response) {
                         var token =  response.data.token;
                         this.$cookie.set('token', token, 3600);
-                    }.bind(this));;
+                        this.$router.push({ path: '/'});
+                    }.bind(this));
 
                 } else {
                     console.log("A username and password must be present!!!!!");
