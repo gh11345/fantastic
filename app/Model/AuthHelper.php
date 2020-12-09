@@ -17,6 +17,8 @@ class AuthHelper
         if (!empty($user)) {
             $updateAt = $user['updated_at'];
             $currentTime = Carbon::now()->toDateTimeString();
+            $user->updated_at = $currentTime;
+            $user->save();
             $start = strtotime($updateAt);
             $end = strtotime($currentTime);
             $timeDiff = round(($end - $start) / 60);

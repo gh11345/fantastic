@@ -3,9 +3,61 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Import Sales Record</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-warning fade" role="alert">Cannot submit empty form.</div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class=" text-primary">
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="name" v-model="nameInput" placeholder="Name" /></td>
+
+                                                <td><input class="form-control" type="text" name="sales" v-model="salesInput" placeholder="Sales" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="iccid" v-model="iccidInput" placeholder="ICCID# (SIM#)" /></td>
+                                                <td><input class="form-control" type="text" name="pos" v-model="posInput" placeholder="POS" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="cm" v-model="cmInput" placeholder="C/M #" /></td>
+                                                <td><input class="form-control" type="text" name="port_in" v-model="port_inInput" placeholder="PORT IN #" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="referer" v-model="refererInput" placeholder="REFERER" /></td>
+                                                <td><input class="form-control" type="text" name="referer_number" v-model="referer_numberInput" placeholder="R/F #" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" v-model="planInput" name="plan" placeholder="PLAN"></td>
+<!--                                                <td><select class="form-control selectpicker" v-model="planInput" data-style="btn btn-link" id="exampleFormControlSelect1" placeholder="Select a Plan">-->
+<!--                                                    <option>25</option>-->
+<!--                                                    <option>41</option>-->
+<!--                                                    <option>50</option>-->
+<!--                                                    <option>65</option>-->
+<!--                                                </select></td>-->
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary modalClose" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" v-on:click="createRecord">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Records</h4>
+                            <h4 class="card-title" style="float:left">Sales Records</h4>
+                            <button type="button" class="btn btn-danger" style="float:right" data-toggle="modal" data-target="#exampleModal">Add Record</button>
 <!--                            <p class="card-category"> Here is a subtitle for this table</p>-->
                         </div>
                         <div class="card-body">
@@ -88,15 +140,35 @@
                                             <li class="page-item" @click="switchPage(page-1)"><a class="page-link">Previous</a></li>
                                         </div>
 
-                                        <div v-for="index in pageNum">
-                                            <div v-if="page == index">
-                                                <li class="page-item" @click="switchPage(index)"><a class="page-link activePage">{{index}}</a></li>
-                                            </div>
-                                            <div v-if="page != index">
-                                                <li class="page-item" @click="switchPage(index)"><a class="page-link" >{{index}}</a></li>
-                                            </div>
-
+                                        <div v-if="(page-2) >=1" >
+                                            <li class="page-item" @click="switchPage(page-2)"><a class="page-link ">{{page-2}}</a></li>
                                         </div>
+
+                                        <div v-if="(page-1) >=1" >
+                                            <li class="page-item" @click="switchPage(page-1)"><a class="page-link ">{{page-1}}</a></li>
+                                        </div>
+
+
+                                        <li class="page-item" @click="switchPage(page)"><a class="page-link activePage">{{page}}</a></li>
+
+
+                                        <div v-if="(page+1) <= pageNum" >
+                                            <li class="page-item" @click="switchPage(page+1)"><a class="page-link ">{{page+1}}</a></li>
+                                        </div>
+
+                                        <div v-if="(page+2) <= pageNum" >
+                                            <li class="page-item" @click="switchPage(page+2)"><a class="page-link ">{{page+2}}</a></li>
+                                        </div>
+
+<!--                                        <div v-for="index in pageNum">-->
+<!--                                            <div v-if="page == index">-->
+<!--                                                <li class="page-item" @click="switchPage(index)"><a class="page-link activePage">{{index}}</a></li>-->
+<!--                                            </div>-->
+<!--                                            <div v-if="page != index">-->
+<!--                                                <li class="page-item" @click="switchPage(index)"><a class="page-link" >{{index}}</a></li>-->
+<!--                                            </div>-->
+
+<!--                                        </div>-->
 
                                         <div v-if="(page+1) <= pageNum">
                                             <li class="page-item" @click="switchPage(page+1)"><a class="page-link">Next</a></li>
@@ -116,6 +188,11 @@
 <style>
     .tableForm {
         #margin-bottom: 30px;
+    }
+
+    .inputForm {
+        border-bottom: 2px solid #ffffff!important;
+        border-top: 2px solid #ffffff!important;
     }
 
     .search-bar-1 {
@@ -172,9 +249,60 @@
                 dateTo: '',
                 dateFrom: '',
                 search: {},
+                nameInput: '',
+                salesInput: '',
+                iccidInput: '',
+                posInput: '',
+                cmInput: '',
+                port_inInput: '',
+                refererInput: '',
+                referer_numberInput: '',
+                planInput: '',
             }
         },
         methods: {
+            createRecord() {
+
+                if (this.nameInput== '' && this.salesInput=='' && this.iccidInput=='' && this.posInput==''
+                    && this.cmInput=='' && this.port_inInput=='' && this.refererInput=='' && this.referer_numberInput==''
+                    && this.planInput=='') {
+                    $('.alert').removeClass("fade");
+                    $('.alert').addClass("show");
+
+                    return;
+                }
+
+
+                var cookie = this.$cookie.get('token');
+                var url = '/api/record/create';
+                axios({
+                    method: 'post',
+                    url: url,
+                    params: {
+                        name: this.nameInput,
+                        sales: this.salesInput,
+                        iccid: this.iccidInput,
+                        pos: this.posInput,
+                        cm: this.cmInput,
+                        port_in: this.port_inInput,
+                        referer: this.refererInput,
+                        referer_number: this.referer_numberInput,
+                        plan: this.planInput
+                    },
+                    headers: {'auth': cookie}
+                }).then( function (response) {
+                    var session =  response.data.auth;
+                    if(session == 'invalid') {
+                        this.$cookie.delete('token');
+                        this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                    } else {
+                        $('.alert').removeClass("show");
+                        $('.alert').addClass("fade");
+                        $('.modalClose').click();
+                        this.getRecords(this.page, 10);
+                    }
+                }.bind(this));
+            },
             searchRecords() {
                 this.search['name'] = this.name;
                 this.search['sales'] = this.sales;
