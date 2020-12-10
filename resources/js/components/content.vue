@@ -1,25 +1,23 @@
 <template>
     <div>
-        <div class="card">
-            <div class="card__header">
-                <h2>Welcome to test Dashboard!</h2>
-
-                <!--<div class="actions">-->
-                <!--<a href=""><i class="zmdi zmdi-check-all"></i></a>-->
-                <!--<a href=""><i class="zmdi zmdi-trending-up"></i></a>-->
-                <!--<div class="dropdown">-->
-                <!--<a href="" data-toggle="dropdown"><i class="zmdi zmdi-more-vert"></i></a>-->
-                <!--<ul class="dropdown-menu pull-right">-->
-                <!--<li><a href="">Change Date Range</a></li>-->
-                <!--<li><a href="">Change Graph Type</a></li>-->
-                <!--<li><a href="">Other Settings</a></li>-->
-                <!--</ul>-->
-                <!--</div>-->
-                <!--</div>-->
-            </div>
-
-            <div class="flot-chart-edge">
-                <div id="chart-curved-line" class="flot-chart">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-chart">
+                        <div class="card-header card-header-success">
+                            <div class="ct-chart" id="dailySalesChart"></div>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">Daily Sales</h4>
+                            <p class="card-category">
+                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">access_time</i> updated 4 minutes ago
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

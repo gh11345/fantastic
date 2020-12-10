@@ -30,7 +30,6 @@ Route::prefix('user')->group(function () {
         // Controllers Within The "App\Http\Controllers\User" Namespace
         Route::post('login', 'UserController@login');
         Route::post('authenticate', 'UserController@authenticate');
-        Route::post('register', 'UserController@register');
     });
 });
 
@@ -39,6 +38,35 @@ Route::middleware('ApiAuthenticator')->group(function () {
         Route::namespace('Records')->group(function () {
             Route::post('create', 'RecordController@create');
             Route::get('get', 'RecordController@get');
+            Route::post('update', 'RecordController@update');
+        });
+    });
+
+    Route::prefix('item')->group(function () {
+        Route::namespace('Items')->group(function () {
+            Route::post('create', 'ItemController@create');
+            Route::get('get', 'ItemController@get');
+            Route::post('update', 'ItemController@update');
+            Route::post('delete', 'ItemController@delete');
+        });
+    });
+
+    Route::prefix('commission')->group(function () {
+        Route::namespace('Commission')->group(function () {
+            Route::post('create', 'CommissionController@create');
+            Route::get('get', 'CommissionController@get');
+            Route::post('update', 'CommissionController@update');
+            Route::post('delete', 'CommissionController@delete');
+        });
+    });
+
+    Route::prefix('user')->group(function () {
+        Route::namespace('User')->group(function () {
+            // Controllers Within The "App\Http\Controllers\User" Namespace
+            Route::get('get-users', 'UserController@getUsers');
+            Route::post('register', 'UserController@register');
+            Route::post('delete', 'UserController@delete');
+            Route::post('update', 'UserController@update');
         });
     });
 });

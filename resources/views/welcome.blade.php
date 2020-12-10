@@ -16,7 +16,8 @@
     <script src="../assets/js/core/jquery.min.js"></script>
     <script src="../assets/js/core/popper.min.js"></script>
     <script src="../assets/js/core/bootstrap-material-design.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+{{--    <script src="../assets/js/plugins/bootstrap-selectpicker.js" ></script>--}}
+{{--    <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>--}}
     <title>{{env('APP_NAME')}}</title>
 </head>
 <body>

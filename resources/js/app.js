@@ -37,6 +37,21 @@ const routes = [
                 path: '/products',
                 name: 'products',
                 component: require('./components/productListing.vue').default
+            },
+            {
+                path: '/employee',
+                name: 'employee',
+                component: require('./components/employee.vue').default
+            },
+            {
+                path: '/commission',
+                name: 'commission',
+                component: require('./components/commission.vue').default
+            },
+            {
+                path: '/items',
+                name: 'items',
+                component: require('./components/items.vue').default
             }
         ]
     },

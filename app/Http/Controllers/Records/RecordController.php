@@ -91,11 +91,48 @@ class RecordController extends Controller
 
         $query->orderBy('id', 'DESC');
         $total = count($query->get());
-        $content = json_decode($query->forPage($page, $limit)->get(), true);
+        $records = $query->select('records.id as id', 'records.name', 'users.id as sales_id', 'users.name as sales', 'records.iccid', 'records.pos', 'records.cm'
+        , 'records.port_in', 'records.referer', 'records.referer_number', 'records.plan as plan_id', 'items.name as plan', 'records.created_at')
+            ->join('users', 'records.sales', '=', 'users.id')
+            ->join('items', 'records.plan', '=', 'items.id')
+            ->forPage($page, $limit)->get();
+        $content = json_decode($records, true);
+
         $data['data'] = $content;
         $data['count'] = $total;
         $data['limit'] = $limit;
         return $data;
+    }
+
+    public function update(Request $request) {
+
+        $record = $request->all();
+        $id = $record['id'];
+        $name = $record['name'] ?? '';
+        $sales = $record['sales'] ?? '';
+        $iccid = $record['iccid'] ?? '';
+        $pos = $record['pos'] ?? '';
+        $cm = $record['cm'] ?? '';
+        $port_in = $record['port_in'] ?? '';
+        $referer = $record['referer'] ?? '';
+        $referer_number = $record['referer_number'] ?? '';
+        $plan = $record['plan'] ?? '';
+
+        $salesRecord = Records::find($id);
+        $salesRecord->name = $name;
+        $salesRecord->sales = $sales;
+        $salesRecord->iccid = $iccid;
+        $salesRecord->pos = $pos;
+        $salesRecord->cm = $cm;
+        $salesRecord->port_in = $port_in;
+        $salesRecord->referer = $referer;
+        $salesRecord->referer_number = $referer_number;
+        $salesRecord->plan = $plan;
+        $salesRecord->save();
+
+        return response()->json([
+            'message' => 'Record Updated',
+        ], 202);
     }
 
     /*
@@ -108,15 +145,15 @@ class RecordController extends Controller
 
         if($auth) {
             Records::create([
-               'name'           => $record['name'],
-               'sales'          => $record['sales'],
-               'iccid'          => $record['iccid'],
-               'pos'            => $record['pos'],
-               'cm'             => $record['cm'],
-               'port_in'        => $record['port_in'],
-               'referer'        => $record['referer'],
-               'referer_number' => $record['referer_number'],
-               'plan'           => $record['plan'],
+               'name'           => $record['name'] ?? '',
+               'sales'          => $record['sales'] ?? '',
+               'iccid'          => $record['iccid'] ?? '',
+               'pos'            => $record['pos'] ?? '',
+               'cm'             => $record['cm'] ?? '',
+               'port_in'        => $record['port_in'] ?? '',
+               'referer'        => $record['referer'] ?? '',
+               'referer_number' => $record['referer_number'] ?? '',
+               'plan'           => $record['plan'] ?? '',
 
             ]);
 

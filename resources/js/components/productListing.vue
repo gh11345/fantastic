@@ -20,7 +20,17 @@
                                             <tr class="inputForm">
                                                 <td><input class="form-control" type="text" name="name" v-model="nameInput" placeholder="Name" /></td>
 
-                                                <td><input class="form-control" type="text" name="sales" v-model="salesInput" placeholder="Sales" /></td>
+                                                <td>
+                                                    <md-field>
+                                                        <md-select v-model="salesInput"  >
+                                                            <md-option value="">Select a sales</md-option>
+                                                            <md-option
+                                                                v-for="user in employee" v-bind:key="user.id"
+                                                                :value="user.id">{{user.name}}</md-option>
+                                                        </md-select>
+                                                    </md-field>
+<!--                                                    <input class="form-control" type="text" name="sales" v-model="salesInput" placeholder="Sales" />-->
+                                                </td>
                                             </tr>
                                             <tr class="inputForm">
                                                 <td><input class="form-control" type="text" name="iccid" v-model="iccidInput" placeholder="ICCID# (SIM#)" /></td>
@@ -35,13 +45,17 @@
                                                 <td><input class="form-control" type="text" name="referer_number" v-model="referer_numberInput" placeholder="R/F #" /></td>
                                             </tr>
                                             <tr class="inputForm">
-                                                <td><input class="form-control" v-model="planInput" name="plan" placeholder="PLAN"></td>
-<!--                                                <td><select class="form-control selectpicker" v-model="planInput" data-style="btn btn-link" id="exampleFormControlSelect1" placeholder="Select a Plan">-->
-<!--                                                    <option>25</option>-->
-<!--                                                    <option>41</option>-->
-<!--                                                    <option>50</option>-->
-<!--                                                    <option>65</option>-->
-<!--                                                </select></td>-->
+                                                <td>
+                                                    <md-field>
+                                                        <md-select v-model="planInput"  >
+                                                            <md-option value="">Select an plan</md-option>
+                                                            <md-option
+                                                                v-for="item in items" v-bind:key="item.id"
+                                                                :value="item.id">{{item.name}}</md-option>
+                                                        </md-select>
+                                                    </md-field>
+<!--                                                    <input class="form-control" v-model="planInput" name="plan" placeholder="PLAN">-->
+                                                </td>
                                             </tr>
                                             </thead>
                                         </table>
@@ -50,6 +64,71 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary modalClose" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-primary" v-on:click="createRecord">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="updateRecord" tabindex="-1" role="dialog" aria-labelledby="updateRecordLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateRecordLabel">Update Sales Record</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-warning fade" role="alert">Cannot submit empty form.</div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class=" text-primary">
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="name" v-model="uName" placeholder="Name" /></td>
+
+                                                <td>
+                                                    <md-field>
+                                                        <md-select v-model="uSales"  >
+                                                            <md-option value="">Select a sales</md-option>
+                                                            <md-option
+                                                                v-for="user in employee" v-bind:key="user.id"
+                                                                :value="user.id">{{user.name}}</md-option>
+                                                        </md-select>
+                                                    </md-field>
+                                                    <!--                                                    <input class="form-control" type="text" name="sales" v-model="salesInput" placeholder="Sales" />-->
+                                                </td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="iccid" v-model="uIccid" placeholder="ICCID# (SIM#)" /></td>
+                                                <td><input class="form-control" type="text" name="pos" v-model="uPos" placeholder="POS" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="cm" v-model="uCm" placeholder="C/M #" /></td>
+                                                <td><input class="form-control" type="text" name="port_in" v-model="uPort_in" placeholder="PORT IN #" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="referer" v-model="uReferer" placeholder="REFERER" /></td>
+                                                <td><input class="form-control" type="text" name="referer_number" v-model="uReferer_number" placeholder="R/F #" /></td>
+                                            </tr>
+                                            <tr class="inputForm">
+                                                <td>
+                                                    <md-field>
+                                                        <md-select v-model="uPlan"  >
+                                                            <md-option value="">Select an plan</md-option>
+                                                            <md-option
+                                                                v-for="item in items" v-bind:key="item.id"
+                                                                :value="item.id">{{item.name}}</md-option>
+                                                        </md-select>
+                                                    </md-field>
+<!--                                                    <input class="form-control" v-model="uPlan" name="plan" placeholder="PLAN">-->
+                                                </td>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary modalClose" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" v-on:click="updateRecord">Update</button>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +146,19 @@
                                         <tr class="search-bar-1">
                                             <th><input class="form-control tableForm" type="text" name="name" v-model="name" placeholder="Name" /></th>
 
-                                            <th><input class="form-control tableForm" type="text" name="sales" v-model="sales" placeholder="Sales" /></th>
+                                            <th>
+                                                <md-field>
+                                                    <md-select v-model="sales">
+                                                        <md-option value="">Select a sales</md-option>
+                                                        <md-option
+                                                            v-for="user in employee" v-bind:key="user.id"
+                                                            :value="user.id">{{user.name}}</md-option>
+                                                    </md-select>
+                                                </md-field>
+
+<!--                                                <input class="form-control tableForm" type="text" name="sales" v-model="sales" placeholder="Sales" />-->
+
+                                            </th>
 
                                             <th><input class="form-control tableForm" type="text" name="iccid" v-model="iccid" placeholder="ICCID# (SIM#)" /></th>
 
@@ -81,7 +172,17 @@
 
                                             <th><input class="form-control tableForm" type="text" name="referer_number" v-model="referer_number" placeholder="R/F #" /></th>
 
-                                            <th><input class="form-control tableForm" v-model="plan" name="plan" placeholder="PLAN"></th>
+                                            <th>
+                                                <md-field>
+                                                    <md-select v-model="plan"  >
+                                                        <md-option value="">Select an plan</md-option>
+                                                        <md-option
+                                                            v-for="item in items" v-bind:key="item.id"
+                                                            :value="item.id">{{item.name}}</md-option>
+                                                    </md-select>
+                                                </md-field>
+<!--                                                <input class="form-control tableForm" v-model="plan" name="plan" placeholder="PLAN">-->
+                                            </th>
                                             <th><md-datepicker v-model="dateFrom">
                                                 <label>Date From</label>
                                             </md-datepicker></th>
@@ -113,8 +214,8 @@
                                             <th>REFERER</th>
                                             <th>R/F #</th>
                                             <th>PLAN</th>
-                                            <th>Date</th>
-                                            <th></th>
+                                            <th>DATE</th>
+                                            <th>EDIT</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -129,7 +230,13 @@
                                             <td>{{record.referer_number}}</td>
                                             <td>{{record.plan}}</td>
                                             <td>{{record.created_at}}</td>
-                                            <td></td>
+                                            <td>
+                                                <button type="button"  class="btn btn-success" data-toggle="modal" data-target="#updateRecord"
+                                                        v-on:click="updateSetValue(record.id, record.name, record.sales_id, record.iccid,
+                                                        record.pos, record.cm, record.port_in, record.referer, record.referer_number, record.plan_id)">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -226,11 +333,15 @@
     export default {
 
         mounted() {
+            this.getUsers();
+            this.getItems();
             this.getRecords(1,10);
         },
         data() {
             return {
                 records:[],
+                employee:[],
+                items:[],
                 recordCount: 0,
                 total: 0,
                 page: 1,
@@ -258,9 +369,123 @@
                 refererInput: '',
                 referer_numberInput: '',
                 planInput: '',
+                uId: '',
+                uName: '',
+                uSales: '',
+                uIccid: '',
+                uPos: '',
+                uCm: '',
+                uPort_in: '',
+                uReferer: '',
+                uReferer_number: '',
+                uPlan: ''
             }
         },
         methods: {
+            updateRecord() {
+                var cookie = this.$cookie.get('token');
+                var url = '/api/record/update';
+                axios({
+                    method: 'post',
+                    url: url,
+                    params: {
+                        id: this.uId,
+                        name: this.uName,
+                        sales: this.uSales,
+                        iccid: this.uIccid,
+                        pos: this.uPos,
+                        cm: this.uCm,
+                        port_in: this.uPort_in,
+                        referer: this.uReferer,
+                        referer_number: this.uReferer_number,
+                        plan: this.uPlan
+                    },
+                    headers: {'auth': cookie}
+                }).then( function (response) {
+                    var session =  response.data.auth;
+                    if(session == 'invalid') {
+                        this.$cookie.delete('token');
+                        this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                    } else {
+                        this.nameInput = '';
+                        this.salesInput = '';
+                        this.iccidInput = '';
+                        this.posInput = '';
+                        this.cmInput = '';
+                        this.port_inInput = '';
+                        this.refererInput = '';
+                        this.referer_numberInput = '';
+                        this.planInput = '';
+
+                        $('.alert').removeClass("show");
+                        $('.alert').addClass("fade");
+                        $('.modalClose').click();
+                        this.getRecords(this.page, 10);
+                    }
+                }.bind(this));
+            },
+            updateSetValue(id, name, sales, iccid, pos, cm, port_in, referer, referer_number, plan) {
+                this.uId = id;
+                this.uName = name;
+                this.uSales = sales;
+                this.uIccid = iccid;
+                this.uPos = pos;
+                this.uCm = cm;
+                this.uPort_in = port_in;
+                this.uReferer = referer;
+                this.uReferer_number = referer_number;
+                this.uPlan = plan;
+            },
+            getItems() {
+                var cookie = this.$cookie.get('token');
+                var url = '/api/item/get';
+                axios({
+                    method: 'get',
+                    url: url,
+                    params: {
+                        page: 0,
+                        limit: 0,
+                    },
+                    headers: {'auth': cookie}
+                }).then( function (response) {
+                    var session =  response.data.auth;
+                    if(session == 'invalid') {
+                        this.$cookie.delete('token');
+                        this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                    } else {
+                        if (typeof response.data.fail !== 'undefined') {
+                            alert(response.data.fail);
+                            return;
+                        }
+                        this.items = response.data.data;
+                    }
+                }.bind(this));
+            },
+            getUsers() {
+                var cookie = this.$cookie.get('token');
+                var url = '/api/user/get-users';
+                axios({
+                    method: 'get',
+                    url: url,
+                    params: {
+                        page: 0,
+                        limit: 0
+                    },
+                    headers: {'auth': cookie}
+                }).then( function (response) {
+                    var session =  response.data.auth;
+                    if(session == 'invalid') {
+                        this.$cookie.delete('token');
+                        this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                    } else {
+                        if (typeof response.data.fail !== 'undefined') {
+                            alert(response.data.fail);
+                            return;
+                        }
+                        this.employee = response.data.data;
+                    }
+                }.bind(this));
+            },
             createRecord() {
 
                 if (this.nameInput== '' && this.salesInput=='' && this.iccidInput=='' && this.posInput==''
@@ -296,6 +521,16 @@
                         this.$cookie.delete('token');
                         this.$router.push({ name: 'login', query: { redirect: '/login' } });
                     } else {
+                        this.nameInput = '';
+                        this.salesInput = '';
+                        this.iccidInput = '';
+                        this.posInput = '';
+                        this.cmInput = '';
+                        this.port_inInput = '';
+                        this.refererInput = '';
+                        this.referer_numberInput = '';
+                        this.planInput = '';
+
                         $('.alert').removeClass("show");
                         $('.alert').addClass("fade");
                         $('.modalClose').click();

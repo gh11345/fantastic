@@ -7,16 +7,37 @@
             </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav nav-side">
-                    <li class="nav-item dashboard">
+                    <li class="nav-item dashboard fSider">
                         <a class="nav-link nav-parent" href="/">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item products">
+                    <li class="nav-item products fSider">
                         <a class="nav-link nav-parent" href="/#/products">
                             <i class="material-icons">content_paste</i>
                             <p>Sales Records</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item employee fSider" >
+                        <a class="nav-link nav-parent" href="/#/employee">
+                            <i class="material-icons">person</i>
+                            <p>Employee</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item items fSider" >
+                        <a class="nav-link nav-parent" href="/#/items">
+                            <i class="material-icons">work</i>
+                            <p>Items</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item commission fSider" >
+                        <a class="nav-link nav-parent" href="/#/commission">
+                            <i class="material-icons">attach_money</i>
+                            <p>Commission</p>
                         </a>
                     </li>
 
@@ -86,6 +107,14 @@
                     if(session!='valid') {
                         this.$cookie.delete('token');
                         this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                    } else {
+                        this.role = response.data.role;
+
+                        if (this.role !='admin') {
+                            $('.employee').remove();
+                            $('.commission').remove();
+                            $('.items').remove();
+                        }
                     }
 
                 }.bind(this));
@@ -94,6 +123,11 @@
         },
         mounted() {
             this.switchActive();
+        },
+        data() {
+            return {
+                role : '',
+            }
         },
         methods: {
             logout() {
@@ -108,6 +142,12 @@
                 $( document ).ready(function() {
                     if (window.location.href.indexOf("products") > -1) {
                         $(".products").addClass("active");
+                    } else if (window.location.href.indexOf("employee") > -1){
+                        $(".employee").addClass("active");
+                    } else if (window.location.href.indexOf("commission") > -1){
+                        $(".commission").addClass("active");
+                    } else if (window.location.href.indexOf("items") > -1){
+                        $(".items").addClass("active");
                     } else {
                         $(".dashboard").addClass("active");
                     }
