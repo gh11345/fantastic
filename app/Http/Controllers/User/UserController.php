@@ -151,6 +151,10 @@ class UserController extends Controller
 
     public function getUsers(Request $request)
     {
+        $token = $request->header('auth');
+        $user = User::where('remember_token', '=', $token)->first();
+        $user_id = $user->id;
+
         $page = !empty($request->query('page')) ? (int)$request->query('page'): 1;
         $limit = !empty($request->query('limit')
             && $request->query('limit')!='undefined')? $request->query('limit') : 10;
@@ -198,6 +202,7 @@ class UserController extends Controller
         }
 
         $data['data'] = $content;
+        $data['current_user'] = $user_id;
         $data['count'] = $total;
         $data['limit'] = $limit;
         return $data;

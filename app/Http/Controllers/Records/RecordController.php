@@ -36,12 +36,17 @@ class RecordController extends Controller
         $plan = $search['plan'] ?? "";
         $dateFrom = $search['dateFrom'] ?? "";
         $dateTo = $search['dateTo'] ?? "";
+        $status = $search['status'] ?? "";
 
         $data = [];
         $query = DB::table('records');
 
         if (!empty($name)) {
-            $query->where("name", 'LIKE', '%'.$name.'%');
+            $query->where("records.name", 'LIKE', '%'.$name.'%');
+        }
+
+        if (!empty($status)) {
+            $query->where("records.status", 'LIKE', '%'.$status.'%');
         }
 
         if (!empty($sales)) {
@@ -77,22 +82,22 @@ class RecordController extends Controller
         }
 
         if (!empty($dateFrom) && !empty($dateTo)) {
-            $query->whereBetween("created_at", [$dateFrom, $dateTo]);
+            $query->whereBetween("records.created_at", [$dateFrom, $dateTo]);
         }
 
         if (!empty($dateFrom) && empty($dateTo)) {
-            $query->where("created_at", '>=', "{$dateFrom}");
+            $query->where("records.created_at", '>=', "{$dateFrom}");
         }
 
         if (empty($dateFrom) && !empty($dateTo)) {
-            $query->where("created_at", '<=', "{$dateTo}");
+            $query->where("records.created_at", '<=', "{$dateTo}");
         }
 
 
-        $query->orderBy('id', 'DESC');
+        $query->orderBy('records.created_at', 'DESC');
         $total = count($query->get());
         $records = $query->select('records.id as id', 'records.name', 'users.id as sales_id', 'users.name as sales', 'records.iccid', 'records.pos', 'records.cm'
-        , 'records.port_in', 'records.referer', 'records.referer_number', 'records.plan as plan_id', 'items.name as plan', 'records.created_at')
+        , 'records.port_in', 'records.referer', 'records.referer_number', 'records.plan as plan_id', 'items.name as plan', DB::raw('DATE(records.created_at) as created_at'), 'records.status')
             ->join('users', 'records.sales', '=', 'users.id')
             ->join('items', 'records.plan', '=', 'items.id')
             ->forPage($page, $limit)->get();
@@ -117,6 +122,9 @@ class RecordController extends Controller
         $referer = $record['referer'] ?? '';
         $referer_number = $record['referer_number'] ?? '';
         $plan = $record['plan'] ?? '';
+        $status = $record['status'] ?? '';
+        $selectedDate = $record['created_at'];
+
 
         $salesRecord = Records::find($id);
         $salesRecord->name = $name;
@@ -128,6 +136,8 @@ class RecordController extends Controller
         $salesRecord->referer = $referer;
         $salesRecord->referer_number = $referer_number;
         $salesRecord->plan = $plan;
+        $salesRecord->status = $status;
+        $salesRecord->created_at = $selectedDate;
         $salesRecord->save();
 
         return response()->json([
@@ -143,6 +153,16 @@ class RecordController extends Controller
         $record = $request->all();
         $auth = $this->authHelper->authenticate($token);
 
+        date_default_timezone_set('America/Vancouver');
+        $selectedDate = $record['created_at'];
+
+        if (empty($selectedDate)) {
+            $selectedDate = date('Y-m-d', time());
+        }
+
+
+
+
         if($auth) {
             Records::create([
                'name'           => $record['name'] ?? '',
@@ -154,7 +174,8 @@ class RecordController extends Controller
                'referer'        => $record['referer'] ?? '',
                'referer_number' => $record['referer_number'] ?? '',
                'plan'           => $record['plan'] ?? '',
-
+               'status'         => $record['status'] ?? '',
+               'created_at'     => $selectedDate
             ]);
 
             return response()->json([

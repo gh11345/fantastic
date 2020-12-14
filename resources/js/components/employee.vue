@@ -172,10 +172,13 @@
                                                     v-on:click="removeUserSetValue(record.id, record.name, record.email, record.role)">
                                                 <i class="material-icons">edit</i>
                                             </button>
+
                                             <button type="button"  class="btn btn-danger" data-toggle="modal" data-target="#removeEmployee"
-                                                    v-on:click="removeUserSetValue(record.id, record.name, record.email, record.role)">
+                                                             v-on:click="removeUserSetValue(record.id, record.name, record.email, record.role)" v-if="currentUser != record.id">
                                                 <i class="material-icons">close</i>
                                             </button>
+
+
                                         </td>
                                     </tr>
                                     </tbody>
@@ -307,7 +310,8 @@
                 removeUserId: '',
                 removeUserName: '',
                 removeUserEmail: '',
-                removeUserRole: ''
+                removeUserRole: '',
+                currentUser: ''
 
             }
         },
@@ -454,6 +458,7 @@
                         this.records = response.data.data;
                         this.total = response.data.count;
                         this.page = page;
+                        this.currentUser = response.data.current_user;
                         this.pageNum = Math.ceil(this.total/response.data.limit);
                     }
                 }.bind(this));

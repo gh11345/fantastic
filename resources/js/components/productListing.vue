@@ -56,6 +56,22 @@
                                                     </md-field>
 <!--                                                    <input class="form-control" v-model="planInput" name="plan" placeholder="PLAN">-->
                                                 </td>
+                                                <td>
+                                                    <md-field>
+                                                        <md-select v-model="ustatus"  >
+                                                            <md-option value="">Select a status</md-option>
+                                                            <md-option value="processed">processed</md-option>
+                                                            <md-option value="canceled">canceled</md-option>
+                                                        </md-select>
+                                                    </md-field>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <md-datepicker v-model="ucreated_at">
+                                                        <label>Application Date</label>
+                                                    </md-datepicker>
+                                                </td>
                                             </tr>
                                             </thead>
                                         </table>
@@ -121,6 +137,22 @@
                                                     </md-field>
 <!--                                                    <input class="form-control" v-model="uPlan" name="plan" placeholder="PLAN">-->
                                                 </td>
+                                                <td>
+                                                    <md-field>
+                                                        <md-select v-model="ustatus"  >
+                                                            <md-option value="">Select a status</md-option>
+                                                            <md-option value="processed">processed</md-option>
+                                                            <md-option value="canceled">canceled</md-option>
+                                                        </md-select>
+                                                    </md-field>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="updateCreationTime">
+                                                    <md-datepicker v-model="ucreated_at">
+                                                        <label>Application Date</label>
+                                                    </md-datepicker>
+                                                </td>
                                             </tr>
                                             </thead>
                                         </table>
@@ -140,82 +172,116 @@
 <!--                            <p class="card-category"> Here is a subtitle for this table</p>-->
                         </div>
                         <div class="card-body">
+                            <div class="search-bar">
+                                <div class="md-layout md-gutter">
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="name" placeholder="Name"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-select v-model="sales">
+                                                <md-option value="">Select a sales</md-option>
+                                                <md-option
+                                                    v-for="user in employee" v-bind:key="user.id"
+                                                    :value="user.id">{{user.name}}</md-option>
+                                            </md-select>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="iccid" placeholder="ICCID"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="pos" placeholder="POS"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="cm" placeholder="CM #"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="port_in" placeholder="PORT IN #"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="referer" placeholder="REFERER"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-input v-model="referer_number" placeholder="R/F #"></md-input>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-select v-model="plan"  >
+                                                <md-option value="">Select an plan</md-option>
+                                                <md-option
+                                                    v-for="item in items" v-bind:key="item.id"
+                                                    :value="item.id">{{item.name}}</md-option>
+                                            </md-select>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-datepicker v-model="dateFrom">
+                                            <label>Date From</label>
+                                        </md-datepicker>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-datepicker v-model="dateTo">
+                                            <label>Date To</label>
+                                        </md-datepicker>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-15">
+                                        <md-field>
+                                            <md-select v-model="status"  >
+                                                <md-option value="">Select a status</md-option>
+                                                <md-option value="processed">processed</md-option>
+                                                <md-option value="canceled">canceled</md-option>
+                                            </md-select>
+                                        </md-field>
+                                    </div>
+
+                                    <div class="md-layout-item md-size-10">
+                                        <button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button>
+                                    </div>
+
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
-                                        <tr class="search-bar-1">
-                                            <th><input class="form-control tableForm" type="text" name="name" v-model="name" placeholder="Name" /></th>
-
-                                            <th>
-                                                <md-field>
-                                                    <md-select v-model="sales">
-                                                        <md-option value="">Select a sales</md-option>
-                                                        <md-option
-                                                            v-for="user in employee" v-bind:key="user.id"
-                                                            :value="user.id">{{user.name}}</md-option>
-                                                    </md-select>
-                                                </md-field>
-
-<!--                                                <input class="form-control tableForm" type="text" name="sales" v-model="sales" placeholder="Sales" />-->
-
-                                            </th>
-
-                                            <th><input class="form-control tableForm" type="text" name="iccid" v-model="iccid" placeholder="ICCID# (SIM#)" /></th>
-
-                                            <th><input class="form-control tableForm" type="text" name="pos" v-model="pos" placeholder="POS" /></th>
-
-                                            <th><input class="form-control tableForm" type="text" name="cm" v-model="cm" placeholder="C/M #" /></th>
-
-                                            <th><input class="form-control tableForm" type="text" name="port_in" v-model="port_in" placeholder="PORT IN #" /></th>
-
-                                            <th><input class="form-control tableForm" type="text" name="referer" v-model="referer" placeholder="REFERER" /></th>
-
-                                            <th><input class="form-control tableForm" type="text" name="referer_number" v-model="referer_number" placeholder="R/F #" /></th>
-
-                                            <th>
-                                                <md-field>
-                                                    <md-select v-model="plan"  >
-                                                        <md-option value="">Select an plan</md-option>
-                                                        <md-option
-                                                            v-for="item in items" v-bind:key="item.id"
-                                                            :value="item.id">{{item.name}}</md-option>
-                                                    </md-select>
-                                                </md-field>
-<!--                                                <input class="form-control tableForm" v-model="plan" name="plan" placeholder="PLAN">-->
-                                            </th>
-                                            <th><md-datepicker v-model="dateFrom">
-                                                <label>Date From</label>
-                                            </md-datepicker></th>
-
-                                            <th><button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button></th>
-                                        </tr>
-                                        <tr class="search-bar">
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th><md-datepicker v-model="dateTo">
-                                                <label>Date To</label>
-                                            </md-datepicker></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th>NAME</th>
-                                            <th>SALES</th>
-                                            <th>ICCID# (SIM#)</th>
-                                            <th>POS</th>
-                                            <th>C/M #</th>
-                                            <th>PORT IN #</th>
-                                            <th>REFERER</th>
-                                            <th>R/F #</th>
-                                            <th>PLAN</th>
-                                            <th>DATE</th>
-                                            <th>EDIT</th>
+                                        <tr style="font-size: 15px !important;">
+                                            <th class="tableHeaderFont">NAME</th>
+                                            <th class="tableHeaderFont">SALES</th>
+                                            <th class="tableHeaderFont">ICCID# (SIM#)</th>
+                                            <th class="tableHeaderFont">POS</th>
+                                            <th class="tableHeaderFont">C/M #</th>
+                                            <th class="tableHeaderFont">PORT IN #</th>
+                                            <th class="tableHeaderFont">REFERER</th>
+                                            <th class="tableHeaderFont">R/F #</th>
+                                            <th class="tableHeaderFont">PLAN</th>
+                                            <th class="tableHeaderFont">DATE</th>
+                                            <th class="tableHeaderFont">STATUS</th>
+                                            <th class="tableHeaderFont">EDIT</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -231,9 +297,18 @@
                                             <td>{{record.plan}}</td>
                                             <td>{{record.created_at}}</td>
                                             <td>
+                                                <div v-if="record.status == 'processed'">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div v-if="record.status == 'canceled'">
+                                                    <i class="material-icons">close</i>
+                                                </div>
+                                            </td>
+                                            <td>
                                                 <button type="button"  class="btn btn-success" data-toggle="modal" data-target="#updateRecord"
                                                         v-on:click="updateSetValue(record.id, record.name, record.sales_id, record.iccid,
-                                                        record.pos, record.cm, record.port_in, record.referer, record.referer_number, record.plan_id)">
+                                                        record.pos, record.cm, record.port_in, record.referer, record.referer_number,
+                                                        record.plan_id, record.status, record.created_at)">
                                                     <i class="material-icons">edit</i>
                                                 </button>
                                             </td>
@@ -293,6 +368,14 @@
 </template>
 
 <style>
+
+    .tableHeaderFont {
+        font-size: 15px !important;
+        font-weight: bold !important;
+    }
+    .dropdown-search {
+        width: 60% !important;
+    }
     .tableForm {
         #margin-bottom: 30px;
     }
@@ -327,6 +410,10 @@
         font-size: 12px;
         text-transform: uppercase;
         text-align: center;
+    }
+
+    .md-datepicker-dialog {
+        z-index: 9999 !important;
     }
 </style>
 <script>
@@ -378,10 +465,40 @@
                 uPort_in: '',
                 uReferer: '',
                 uReferer_number: '',
-                uPlan: ''
+                uPlan: '',
+                status: '',
+                ustatus: '',
+                ucreated_at: '',
+                role: ''
             }
         },
         methods: {
+            auth() {
+                var cookie = this.$cookie.get('token');
+                if(cookie=='' || cookie=='undefined' || cookie == null) {
+                    this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                }
+                else {
+                    axios({
+                        method: 'post',
+                        url: '/api/user/authenticate',
+                        headers: {'auth':cookie}
+
+                    }).then( function (response) {
+                        var session =  response.data.auth;
+                        if(session!='valid') {
+                            this.$cookie.delete('token');
+                            this.$router.push({ name: 'login', query: { redirect: '/login' } });
+                        } else {
+                            this.role = response.data.role;
+                            if (this.role !='admin') {
+                                $('.updateCreationTime').remove();
+                            }
+                        }
+
+                    }.bind(this));
+                }
+            },
             updateRecord() {
                 var cookie = this.$cookie.get('token');
                 var url = '/api/record/update';
@@ -398,7 +515,9 @@
                         port_in: this.uPort_in,
                         referer: this.uReferer,
                         referer_number: this.uReferer_number,
-                        plan: this.uPlan
+                        plan: this.uPlan,
+                        status: this.ustatus,
+                        created_at : this.ucreated_at
                     },
                     headers: {'auth': cookie}
                 }).then( function (response) {
@@ -416,6 +535,8 @@
                         this.refererInput = '';
                         this.referer_numberInput = '';
                         this.planInput = '';
+                        this.ustatus = '';
+                        this.ucreated_at = '';
 
                         $('.alert').removeClass("show");
                         $('.alert').addClass("fade");
@@ -424,7 +545,7 @@
                     }
                 }.bind(this));
             },
-            updateSetValue(id, name, sales, iccid, pos, cm, port_in, referer, referer_number, plan) {
+            updateSetValue(id, name, sales, iccid, pos, cm, port_in, referer, referer_number, plan, status, created_at) {
                 this.uId = id;
                 this.uName = name;
                 this.uSales = sales;
@@ -435,6 +556,8 @@
                 this.uReferer = referer;
                 this.uReferer_number = referer_number;
                 this.uPlan = plan;
+                this.ustatus = status;
+                this.ucreated_at = created_at;
             },
             getItems() {
                 var cookie = this.$cookie.get('token');
@@ -490,7 +613,7 @@
 
                 if (this.nameInput== '' && this.salesInput=='' && this.iccidInput=='' && this.posInput==''
                     && this.cmInput=='' && this.port_inInput=='' && this.refererInput=='' && this.referer_numberInput==''
-                    && this.planInput=='') {
+                    && this.planInput=='' && this.ustatus=='' && this.ucreated_at=='') {
                     $('.alert').removeClass("fade");
                     $('.alert').addClass("show");
 
@@ -512,7 +635,9 @@
                         port_in: this.port_inInput,
                         referer: this.refererInput,
                         referer_number: this.referer_numberInput,
-                        plan: this.planInput
+                        plan: this.planInput,
+                        status: this.ustatus,
+                        created_at : this.ucreated_at
                     },
                     headers: {'auth': cookie}
                 }).then( function (response) {
@@ -530,6 +655,8 @@
                         this.refererInput = '';
                         this.referer_numberInput = '';
                         this.planInput = '';
+                        this.ustatus = '';
+                        this.ucreated_at = '';
 
                         $('.alert').removeClass("show");
                         $('.alert').addClass("fade");
@@ -550,6 +677,7 @@
                 this.search['plan'] = this.plan;
                 this.search['dateFrom'] = this.dateFrom;
                 this.search['dateTo'] = this.dateTo;
+                this.search['status'] = this.status;
 
                 this.getRecords(1,10)
             },

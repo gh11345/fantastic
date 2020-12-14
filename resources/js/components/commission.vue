@@ -20,7 +20,7 @@
                                             <tr class="inputForm">
                                                 <td>
                                                     <md-field>
-                                                        <md-select v-model="sales_id">
+                                                        <md-select v-model="sales_id" md-dense multiple>
                                                             <md-option value="">Select a sales</md-option>
                                                             <md-option
                                                                 v-for="user in employee" v-bind:key="user.id"
@@ -33,7 +33,7 @@
                                             <tr class="inputForm">
                                                 <td>
                                                     <md-field>
-                                                        <md-select v-model="plan_id"  >
+                                                        <md-select v-model="plan_id"  md-dense multiple>
                                                             <md-option value="">Select an plan</md-option>
                                                             <md-option
                                                                 v-for="item in items" v-bind:key="item.id"
@@ -163,6 +163,7 @@
 
                                         </th>
                                         <th><input class="form-control tableForm" type="text" name="sales" v-model="icommission" placeholder="Comission" /></th>
+                                        <th><input class="form-control tableForm" type="text" name="bonus" v-model="ibonus" placeholder="Bonus" /></th>
                                         <th><md-datepicker v-model="dateFrom">
                                             <label>Date From</label>
                                         </md-datepicker></th>
@@ -170,6 +171,7 @@
                                         <th><button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button></th>
                                     </tr>
                                     <tr class="search-bar">
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -182,6 +184,7 @@
                                         <th>SALES</th>
                                         <th>ITEM</th>
                                         <th>COMMISSION</th>
+                                        <th>BONUS</th>
                                         <th>LAST UPDATE</th>
                                         <th>EDIT / DELETE</th>
                                     </tr>
@@ -191,6 +194,7 @@
                                         <td>{{record.sales}}</td>
                                         <td>{{record.plan}}</td>
                                         <td>{{record.commission}}</td>
+                                        <td>{{record.bonus}}</td>
                                         <td>{{record.updated_at}}</td>
                                         <td>
                                             <button type="button"  class="btn btn-success" data-toggle="modal" data-target="#updateEmployee"
@@ -334,7 +338,9 @@
                 search: {},
                 icommission: '',
                 isales_id: '',
-                iplan_id: ''
+                iplan_id: '',
+                ibonus: '',
+                bonus: '',
 
             }
         },

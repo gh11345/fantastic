@@ -48,6 +48,12 @@
             <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
                 <div class="container-fluid">
 
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                    </button>
                     <div class="collapse navbar-collapse justify-content-end">
 
                         <ul class="navbar-nav">
@@ -69,7 +75,7 @@
                     </div>
                 </div>
             </nav>
-            <div class="content">
+            <div class="content contentMod">
                 <router-view></router-view>
             </div>
         </div>
@@ -85,6 +91,11 @@
         color: white !important;
         text-decoration: none !important;
     }
+
+    .contentMod {
+        margin-top: 30px !important;
+    }
+
 
 </style>
 

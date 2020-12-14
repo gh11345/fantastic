@@ -123,11 +123,15 @@ class CommissionController extends Controller
             $item = $param['item'] ?? "";
             $commission = $param['commission'] ?? "";
 
-            Commission::create([
-                'user_id' => $name,
-                'items' => $item,
-                'commission' => $commission,
-            ]);
+            foreach($name as $user_id) {
+                foreach($item as $eachItem) {
+                    Commission::create([
+                        'user_id' => $user_id,
+                        'items' => $eachItem,
+                        'commission' => $commission,
+                    ]);
+                }
+            }
 
             return response()->json([
                 'message' => 'Commission record created',
