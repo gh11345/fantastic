@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-hover">
                                     <thead class=" text-primary">
                                         <tr style="font-size: 15px !important;">
                                             <th class="tableHeaderFont">NAME</th>
