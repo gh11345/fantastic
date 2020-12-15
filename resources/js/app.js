@@ -52,6 +52,11 @@ const routes = [
                 path: '/items',
                 name: 'items',
                 component: require('./components/items.vue').default
+            },
+            {
+                path: '/report',
+                name: 'report',
+                component: require('./components/report.vue').default
             }
         ]
     },

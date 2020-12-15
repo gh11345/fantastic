@@ -46,6 +46,9 @@
                                             <tr class="inputForm">
                                                 <td><input class="form-control" type="text" name="commission" v-model="commission" placeholder="Commission" /></td>
                                             </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="commission" v-model="bonus" placeholder="Bonus" /></td>
+                                            </tr>
                                             </thead>
                                         </table>
                                     </div>
@@ -116,6 +119,9 @@
                                             <tr class="inputForm">
                                                 <td><input class="form-control" type="text" name="commission" v-model="commission" placeholder="Commission" /></td>
                                             </tr>
+                                            <tr class="inputForm">
+                                                <td><input class="form-control" type="text" name="commission" v-model="bonus" placeholder="Bonus" /></td>
+                                            </tr>
                                             </thead>
                                         </table>
                                     </div>
@@ -134,52 +140,89 @@
                             <!--                            <p class="card-category"> Here is a subtitle for this table</p>-->
                         </div>
                         <div class="card-body">
+                            <div class="search-bar">
+                                <div class="md-layout md-gutter">
+                                    <div class="md-layout-item md-size-25">
+                                        <md-field>
+                                            <md-select v-model="isales_id">
+                                                <md-option value="">Select a sales</md-option>
+                                                <md-option
+                                                    v-for="user in employee" v-bind:key="user.id"
+                                                    :value="user.id">{{user.name}}</md-option>
+                                            </md-select>
+                                        </md-field>
+                                    </div>
+                                    <div class="md-layout-item md-size-25">
+                                        <md-field>
+                                            <md-select v-model="iplan_id"  >
+                                                <md-option value="">Select an plan</md-option>
+                                                <md-option
+                                                    v-for="item in items" v-bind:key="item.id"
+                                                    :value="item.id">{{item.name}}</md-option>
+                                            </md-select>
+                                        </md-field>
+                                    </div>
+<!--                                    <div class="md-layout-item md-size-15">-->
+<!--                                        <md-field>-->
+<!--                                            <md-input v-model="icommission" placeholder="Comission"></md-input>-->
+<!--                                        </md-field>-->
+<!--                                    </div>-->
+
+                                    <div class="md-layout-item md-size-10">
+                                        <button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button>
+
+                                    </div>
+                                </div>
+
+
+<!--                                <tr class="search-bar-1">-->
+<!--                                    <th>-->
+<!--                                        <md-field>-->
+<!--                                            <md-select v-model="isales_id">-->
+<!--                                                <md-option value="">Select a sales</md-option>-->
+<!--                                                <md-option-->
+<!--                                                    v-for="user in employee" v-bind:key="user.id"-->
+<!--                                                    :value="user.id">{{user.name}}</md-option>-->
+<!--                                            </md-select>-->
+<!--                                        </md-field>-->
+<!--                                        &lt;!&ndash;                                            <input class="form-control tableForm" type="text" name="name" v-model="name" placeholder="Name" />&ndash;&gt;-->
+<!--                                    </th>-->
+<!--                                    <th>-->
+
+<!--                                        <md-field>-->
+<!--                                            <md-select v-model="iplan_id"  >-->
+<!--                                                <md-option value="">Select an plan</md-option>-->
+<!--                                                <md-option-->
+<!--                                                    v-for="item in items" v-bind:key="item.id"-->
+<!--                                                    :value="item.id">{{item.name}}</md-option>-->
+<!--                                            </md-select>-->
+<!--                                        </md-field>-->
+<!--                                        &lt;!&ndash;                                            <input class="form-control tableForm" type="text" name="iccid" v-model="role" placeholder="Role" />&ndash;&gt;-->
+
+<!--                                    </th>-->
+<!--                                    <th><input class="form-control tableForm" type="text" name="sales" v-model="icommission" placeholder="Comission" /></th>-->
+<!--                                    <th><input class="form-control tableForm" type="text" name="bonus" v-model="ibonus" placeholder="Bonus" /></th>-->
+<!--                                    <th><md-datepicker v-model="dateFrom">-->
+<!--                                        <label>Date From</label>-->
+<!--                                    </md-datepicker></th>-->
+
+<!--                                    <th><button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button></th>-->
+<!--                                </tr>-->
+<!--                                <tr class="search-bar">-->
+<!--                                    <th></th>-->
+<!--                                    <th></th>-->
+<!--                                    <th></th>-->
+<!--                                    <th></th>-->
+<!--                                    <th><md-datepicker v-model="dateTo">-->
+<!--                                        <label>Date To</label>-->
+<!--                                    </md-datepicker></th>-->
+<!--                                    <th></th>-->
+<!--                                </tr>-->
+                            </div>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
-                                    <tr class="search-bar-1">
-                                        <th>
-                                            <md-field>
-                                                <md-select v-model="isales_id">
-                                                    <md-option value="">Select a sales</md-option>
-                                                    <md-option
-                                                        v-for="user in employee" v-bind:key="user.id"
-                                                        :value="user.id">{{user.name}}</md-option>
-                                                </md-select>
-                                            </md-field>
-<!--                                            <input class="form-control tableForm" type="text" name="name" v-model="name" placeholder="Name" />-->
-                                        </th>
-                                        <th>
 
-                                            <md-field>
-                                                <md-select v-model="iplan_id"  >
-                                                    <md-option value="">Select an plan</md-option>
-                                                    <md-option
-                                                        v-for="item in items" v-bind:key="item.id"
-                                                        :value="item.id">{{item.name}}</md-option>
-                                                </md-select>
-                                            </md-field>
-                                            <!--                                            <input class="form-control tableForm" type="text" name="iccid" v-model="role" placeholder="Role" />-->
-
-                                        </th>
-                                        <th><input class="form-control tableForm" type="text" name="sales" v-model="icommission" placeholder="Comission" /></th>
-                                        <th><input class="form-control tableForm" type="text" name="bonus" v-model="ibonus" placeholder="Bonus" /></th>
-                                        <th><md-datepicker v-model="dateFrom">
-                                            <label>Date From</label>
-                                        </md-datepicker></th>
-
-                                        <th><button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button></th>
-                                    </tr>
-                                    <tr class="search-bar">
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th><md-datepicker v-model="dateTo">
-                                            <label>Date To</label>
-                                        </md-datepicker></th>
-                                        <th></th>
-                                    </tr>
                                     <tr>
                                         <th>SALES</th>
                                         <th>ITEM</th>
@@ -198,11 +241,11 @@
                                         <td>{{record.updated_at}}</td>
                                         <td>
                                             <button type="button"  class="btn btn-success" data-toggle="modal" data-target="#updateEmployee"
-                                                    v-on:click="removeUserSetValue(record.id, record.sales_id, record.sales, record.plan, record.plan_id, record.commission)">
+                                                    v-on:click="removeUserSetValue(record.id, record.sales_id, record.sales, record.plan, record.plan_id, record.commission, record.bonus)">
                                                 <i class="material-icons">edit</i>
                                             </button>
                                             <button type="button"  class="btn btn-danger" data-toggle="modal" data-target="#removeEmployee"
-                                                    v-on:click="removeUserSetValue(record.id, record.sales_id, record.sales, record.plan, record.plan_id, record.commission)">
+                                                    v-on:click="removeUserSetValue(record.id, record.sales_id, record.sales, record.plan, record.plan_id, record.commission, record.bonus)">
                                                 <i class="material-icons">close</i>
                                             </button>
                                         </td>
@@ -406,6 +449,7 @@
                         name: this.sales_id,
                         item: this.plan_id,
                         commission: this.commission,
+                        bonus: this.bonus
                     },
                     headers: {'auth': cookie}
                 }).then( function (response) {
@@ -420,6 +464,7 @@
                         this.plan = '';
                         this.plan_id = '';
                         this.commission = '';
+                        this.bonus = '';
                         $('.alert').removeClass("show");
                         $('.alert').addClass("fade");
                         $('.modalClose').click();
@@ -427,13 +472,14 @@
                     }
                 }.bind(this));
             },
-            removeUserSetValue(id, sales_id, sales, plan, plan_id, commission) {
+            removeUserSetValue(id, sales_id, sales, plan, plan_id, commission, bonus) {
                 this.commission_id = id;
                 this.sales_id = sales_id;
                 this.sales = sales;
                 this.plan = plan;
                 this.plan_id = plan_id;
                 this.commission = commission;
+                this.bonus = bonus
             },
             removeEmployee() {
                 var cookie = this.$cookie.get('token');
@@ -457,6 +503,7 @@
                         this.plan = '';
                         this.plan_id = '';
                         this.commission = '';
+                        this.bonus = '';
                         $('.alert').removeClass("show");
                         $('.alert').addClass("fade");
                         $('.modalClose').click();
@@ -466,7 +513,7 @@
             },
             createRecord() {
 
-                if (this.sales== '' && this.plan=='' && this.commission=='') {
+                if (this.sales== '' && this.plan=='' && this.commission=='' && this.bonus == '') {
                     $('.alert').removeClass("fade");
                     $('.alert').addClass("show");
 
@@ -481,6 +528,7 @@
                         name: this.sales_id,
                         item: this.plan_id,
                         commission: this.commission,
+                        bonus: this.bonus
                     },
                     headers: {'auth': cookie}
                 }).then( function (response) {
@@ -495,6 +543,7 @@
                         this.plan = '';
                         this.plan_id = '';
                         this.commission = '';
+                        this.bonus = '';
                         $('.alert').removeClass("show");
                         $('.alert').addClass("fade");
                         $('.modalClose').click();
@@ -505,9 +554,9 @@
             searchRecords() {
                 this.search['name'] = this.isales_id;
                 this.search['item'] = this.iplan_id;
-                this.search['commission'] = this.icommission;
-                this.search['dateFrom'] = this.dateFrom;
-                this.search['dateTo'] = this.dateTo;
+                // this.search['commission'] = this.icommission;
+                // this.search['dateFrom'] = this.dateFrom;
+                // this.search['dateTo'] = this.dateTo;
 
                 this.getRecords(1,10)
             },

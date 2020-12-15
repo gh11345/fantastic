@@ -26,6 +26,152 @@ class UserController extends Controller
         return view('login');
     }
 
+    public function report(Request $request) {
+        $token = $request->header('auth');
+        $user = User::where('remember_token', '=', $token)->first();
+        $role = $user['role'];
+
+        if ($role == self::ADMIN_ROLE) {
+            $param = $request->all();
+            $sales_id = $param['sales_id'] ?? "";
+            $from = $param['from'] ?? "";
+            $to = $param['to'] ?? "";
+
+            $query = DB::table('items');
+            $itemList = json_decode($query->get(), true);
+
+            $query = DB::table('commission')
+                ->where("user_id", '=', $sales_id);
+
+            $commissionList = json_decode($query->get(), true);
+
+
+            $query = DB::table('records')
+                ->where("sales", '=', $sales_id)
+                ->whereBetween("created_at", [$from, $to]);
+
+            $data = json_decode($query->get(), true);
+
+            $dateCategorizedDate = [];
+            foreach ($data as $record) {
+                $date = $record['created_at'];
+                $date=date_create($date);
+                $parsedDate = date_format($date, 'Y-m-d');
+                $dateCategorizedDate[$parsedDate][]= $record;
+            }
+
+            $total = [];
+            $commissionAmount = 0;
+
+            foreach ($dateCategorizedDate as $dateRecord) {
+                $itemCount = count($dateRecord);
+                foreach ($dateRecord as $item) {
+                    $planId = $item['plan'];
+                    $commissionBonus = $this->fetchCommissionBonus($commissionList, $planId);
+                    $commission = $commissionBonus[0];
+                    $bonus = $commissionBonus[1];
+
+                    if (!isset($total[$planId]['count'])) {
+                        $total[$planId]['count'] = 1;
+                    } else {
+                        $total[$planId]['count'] += 1;
+                    }
+
+                    if ($itemCount >=2 ) {
+                        $commissionAmount += $commission + $bonus;
+
+                        if (!isset($total[$planId]['total'])) {
+                            $total[$planId]['total'] = $commission + $bonus;
+                        } else {
+                            $total[$planId]['total'] += $commission + $bonus;
+                        }
+
+                        if (!isset($total[$planId]['with_bonus'])) {
+                            $total[$planId]['with_bonus'] = 1;
+                        } else {
+                            $total[$planId]['with_bonus'] += 1;
+                        }
+
+                        if (!isset($total[$planId]['without_bonus'])) {
+                            $total[$planId]['without_bonus'] = 0;
+                        }
+
+                    } else {
+                        $commissionAmount += $commission;
+
+                        if (!isset($total[$planId]['total'])) {
+                            $total[$planId]['total'] = $commission;
+                        } else {
+                            $total[$planId]['total'] += $commission;
+                        }
+
+                        if (!isset($total[$planId]['without_bonus'])) {
+                            $total[$planId]['without_bonus'] = 1;
+                        } else {
+                            $total[$planId]['without_bonus'] += 1;
+                        }
+
+                        if (!isset($total[$planId]['with_bonus'])) {
+                            $total[$planId]['with_bonus'] = 0;
+                        }
+                    }
+                }
+
+            }
+
+            $result = [];
+            foreach ($total as $planId => $record) {
+                $itemName = $this->fetchItemName($itemList, $planId);
+                $numberItem = $record['count'];
+                $itemTotal = $record['total'];
+                $withBonus = $record['with_bonus'];
+                $withoutBonus = $record['without_bonus'];
+
+                $tmp['itemName'] = $itemName;
+                $tmp['numberItem'] = $numberItem;
+                $tmp['itemTotal'] = $itemTotal;
+                $tmp['withBonus'] = $withBonus;
+                $tmp['withoutBonus'] = $withoutBonus;
+
+                $result[] = $tmp;
+            }
+            $data = [];
+            $data['records'] = $result;
+            $data['total'] = $commissionAmount;
+
+            return $data;
+        }
+    }
+
+    public function fetchItemName($itemList, $planId) {
+        $itemName = '';
+        foreach ($itemList as $item) {
+            $itemId = $item['id'];
+
+            if ($planId == $itemId) {
+               $itemName = $item['name'];
+            }
+        }
+
+        return $itemName;
+    }
+
+    public function fetchCommissionBonus($list, $planId) {
+        $commission = '';
+        $bonus = '';
+
+        foreach ($list as $item) {
+            $itemId = $item['items'];
+
+            if ($planId == $itemId) {
+                $commission = $item['commission'] ?? '';
+                $bonus = $item['bonus'] ?? '';
+            }
+        }
+
+        return [$commission, $bonus];
+    }
+
     public function register(Request $request)
     {
         $token = $request->header('auth');
@@ -33,6 +179,10 @@ class UserController extends Controller
         $role = $user['role'];
 
         if ($role == self::ADMIN_ROLE) {
+
+            date_default_timezone_set('America/Vancouver');
+            $updatedAt = date('Y-m-d H:i:s', time());
+
             $user = $request->all();
             $username = $user['name'] ?? "";
             $email = $user['email'] ?? "";
@@ -47,7 +197,8 @@ class UserController extends Controller
                     'email' => $email,
                     'password' => $password,
                     'remember_token' => $token,
-                    'role'  => $role
+                    'role'  => $role,
+                    'updated_at' => $updatedAt
                 ]);
 
                 return response()->json([
@@ -68,6 +219,9 @@ class UserController extends Controller
         $role = $user['role'];
 
         if ($role == self::ADMIN_ROLE) {
+            date_default_timezone_set('America/Vancouver');
+            $updatedAt = date('Y-m-d H:i:s', time());
+
             $user = $request->all();
             $id = $user['id'] ?? "";
             $username = $user['name'] ?? "";
@@ -78,6 +232,7 @@ class UserController extends Controller
             $user = User::find($id);
             $user->name = $username;
             $user->email = $email;
+            $user->updated_at = $updatedAt;
 
             if (!empty($password)) {
                 $user->password = $password;

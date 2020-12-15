@@ -41,6 +41,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item report fSider" >
+                        <a class="nav-link nav-parent" href="/#/report">
+                            <i class="material-icons">text_snippet</i>
+                            <p>Report</p>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -125,6 +132,7 @@
                             $('.employee').remove();
                             $('.commission').remove();
                             $('.items').remove();
+                            $('.report').remove();
                         }
                     }
 
@@ -159,6 +167,8 @@
                         $(".commission").addClass("active");
                     } else if (window.location.href.indexOf("items") > -1){
                         $(".items").addClass("active");
+                    } else if (window.location.href.indexOf("report") > -1){
+                        $(".report").addClass("active");
                     } else {
                         $(".dashboard").addClass("active");
                     }

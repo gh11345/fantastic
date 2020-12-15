@@ -62,7 +62,8 @@ class CommissionController extends Controller
 
             $total = count($query->get());
             $records = $query->select('commission.id as id', 'users.id as sales_id', 'users.name as sales'
-                , 'items.name as plan', 'items.id as plan_id', 'commission', 'commission.updated_at', 'commission.created_at')
+                , 'items.name as plan', 'items.id as plan_id', 'commission'
+                , DB::raw('DATE(commission.updated_at) as updated_at'), 'commission.bonus')
                 ->join('users', 'commission.user_id', '=', 'users.id')
                 ->join('items', 'commission.items', '=', 'items.id')
                 ->forPage($page, $limit)->get();
@@ -86,16 +87,24 @@ class CommissionController extends Controller
         $role = $user['role'];
 
         if ($role == self::ADMIN_ROLE) {
+
+            date_default_timezone_set('America/Vancouver');
+            $updatedAt = date('Y-m-d', time());
+
+
             $param = $request->all();
             $id = $param['id'] ?? "";
             $name = $param['name'] ?? "";
             $item = $param['item'] ?? "";
             $commission = $param['commission'] ?? "";
+            $bonus = $param['bonus'] ?? "";
 
             $commissionRecord = Commission::find($id);
             $commissionRecord->user_id = $name;
             $commissionRecord->items = $item;
             $commissionRecord->commission = $commission;
+            $commissionRecord->bonus = $bonus;
+            $commissionRecord->updated_at = $updatedAt;
             $commissionRecord->save();
 
             return response()->json([
@@ -118,10 +127,14 @@ class CommissionController extends Controller
         $role = $user['role'];
 
         if ($role == self::ADMIN_ROLE) {
+
+            date_default_timezone_set('America/Vancouver');
+            $updatedAt = date('Y-m-d', time());
             $param = $request->all();
             $name = $param['name'] ?? "";
             $item = $param['item'] ?? "";
             $commission = $param['commission'] ?? "";
+            $bonus = $param['bonus'] ?? "";
 
             foreach($name as $user_id) {
                 foreach($item as $eachItem) {
@@ -129,6 +142,8 @@ class CommissionController extends Controller
                         'user_id' => $user_id,
                         'items' => $eachItem,
                         'commission' => $commission,
+                        'bonus' => $bonus,
+                        'updated_at' => $updatedAt
                     ]);
                 }
             }

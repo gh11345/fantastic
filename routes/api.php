@@ -67,6 +67,7 @@ Route::middleware('ApiAuthenticator')->group(function () {
             Route::post('register', 'UserController@register');
             Route::post('delete', 'UserController@delete');
             Route::post('update', 'UserController@update');
+            Route::post('report', 'UserController@report');
         });
     });
 });
