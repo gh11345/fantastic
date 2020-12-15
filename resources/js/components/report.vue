@@ -8,7 +8,7 @@
                             <h4 class="card-title">Commission Report</h4>
                             <p class="card-category">Select a sales and time range to generate report</p>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body printTable">
                             <div class="search-bar">
                                 <div class="md-layout md-gutter">
                                     <div class="md-layout-item md-size-25">
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive printTable">
+                            <div class="table-responsive ">
                                 <table class="table commissionTable" id="printTable">
                                     <thead class=" text-primary">
 
@@ -172,10 +172,7 @@
                 }.bind(this));
             },
             print() {
-
-                // var doc = new jsPDF();
-                // doc.fromHTML(`<html><head><title>${123}</title></head><body>` + document.getElementById('printTable').innerHTML + `</body></html>`);
-                // doc.save('div.pdf');
+                var filename = "sales_id_"+this.sales_id+"_"+this.dateFrom+"_"+this.dateTo+".pdf";
                 var HTML_Width = $(".printTable").width();
                 var HTML_Height = $(".printTable").height();
                 var top_left_margin = 15;
@@ -190,7 +187,7 @@
                 html2canvas($(".printTable")[0],{allowTaint:true}).then(function(canvas) {
                     canvas.getContext('2d');
 
-                    console.log(canvas.height+"  "+canvas.width);
+                    // console.log(canvas.height+"  "+canvas.width);
 
 
                     var imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -203,7 +200,9 @@
                         pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
                     }
 
-                    pdf.save("HTML-Document.pdf");
+                    console.log(filename);
+
+                    pdf.save(filename);
                 });
             },
             searchRecords() {
