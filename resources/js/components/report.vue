@@ -39,8 +39,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table commissionTable">
+                            <div class="table-responsive printTable">
+                                <table class="table commissionTable" id="printTable">
                                     <thead class=" text-primary">
 
                                     <tr>
@@ -69,6 +69,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <button type="button"  class="btn btn-success print-button" style="float: right" v-on:click="print">
+                                <i class="material-icons">print</i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -129,6 +132,7 @@
         mounted() {
             this.getUsers();
             $('.commissionTable').hide();
+            $('.print-button').hide();
         },
         data() {
             return {
@@ -167,6 +171,41 @@
                     }
                 }.bind(this));
             },
+            print() {
+
+                // var doc = new jsPDF();
+                // doc.fromHTML(`<html><head><title>${123}</title></head><body>` + document.getElementById('printTable').innerHTML + `</body></html>`);
+                // doc.save('div.pdf');
+                var HTML_Width = $(".printTable").width();
+                var HTML_Height = $(".printTable").height();
+                var top_left_margin = 15;
+                var PDF_Width = HTML_Width+(top_left_margin*2);
+                var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+                var canvas_image_width = HTML_Width;
+                var canvas_image_height = HTML_Height;
+
+                var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
+
+
+                html2canvas($(".printTable")[0],{allowTaint:true}).then(function(canvas) {
+                    canvas.getContext('2d');
+
+                    console.log(canvas.height+"  "+canvas.width);
+
+
+                    var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                    var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+
+
+                    for (var i = 1; i <= totalPDFPages; i++) {
+                        pdf.addPage(PDF_Width, PDF_Height);
+                        pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                    }
+
+                    pdf.save("HTML-Document.pdf");
+                });
+            },
             searchRecords() {
                 var cookie = this.$cookie.get('token');
                 var url = '/api/user/report';
@@ -192,6 +231,7 @@
                         this.records = response.data.records;
                         this.total = response.data.total;
                         $('.commissionTable').show();
+                        $('.print-button').show();
                     }
                 }.bind(this));
 

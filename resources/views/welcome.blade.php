@@ -47,6 +47,8 @@
     <script src="../assets/js/plugins/arrive.min.js"></script>
 {{--    <!-- Chartist JS -->--}}
     <script src="../assets/js/plugins/chartist.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 {{--    <!--  Notifications Plugin    -->--}}
 {{--    <script src="../assets/js/plugins/bootstrap-notify.js"></script>--}}
 {{--    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->--}}
