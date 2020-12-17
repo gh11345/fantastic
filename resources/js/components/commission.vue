@@ -20,8 +20,8 @@
                                             <tr class="inputForm">
                                                 <td>
                                                     <md-field>
-                                                        <md-select v-model="sales_id" md-dense multiple>
-                                                            <md-option value="">Select a sales</md-option>
+                                                        <label for="sales">Select a sales</label>
+                                                        <md-select v-model="sales_id" md-dense multiple name="sales" id="sales">
                                                             <md-option
                                                                 v-for="user in employee" v-bind:key="user.id"
                                                                 :value="user.id">{{user.name}}</md-option>
@@ -33,8 +33,8 @@
                                             <tr class="inputForm">
                                                 <td>
                                                     <md-field>
-                                                        <md-select v-model="plan_id"  md-dense multiple>
-                                                            <md-option value="">Select an plan</md-option>
+                                                        <label for="plan">Select a plan</label>
+                                                        <md-select v-model="plan_id"  md-dense multiple name="plan" id="plan">
                                                             <md-option
                                                                 v-for="item in items" v-bind:key="item.id"
                                                                 :value="item.id">{{item.name}}</md-option>

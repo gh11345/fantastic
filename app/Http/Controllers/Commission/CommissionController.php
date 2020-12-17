@@ -137,15 +137,23 @@ class CommissionController extends Controller
             $bonus = $param['bonus'] ?? "";
 
             foreach($name as $user_id) {
-                foreach($item as $eachItem) {
-                    Commission::create([
-                        'user_id' => $user_id,
-                        'items' => $eachItem,
-                        'commission' => $commission,
-                        'bonus' => $bonus,
-                        'updated_at' => $updatedAt
-                    ]);
+
+                if (!empty($user_id)) {
+                    foreach($item as $eachItem) {
+
+                        if (!empty($eachItem)) {
+                            Commission::create([
+                                'user_id' => $user_id,
+                                'items' => $eachItem,
+                                'commission' => $commission,
+                                'bonus' => $bonus,
+                                'updated_at' => $updatedAt
+                            ]);
+                        }
+
+                    }
                 }
+
             }
 
             return response()->json([

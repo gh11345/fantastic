@@ -37,6 +37,10 @@ class UserController extends Controller
             $from = $param['from'] ?? "";
             $to = $param['to'] ?? "";
 
+            $query = DB::table('users')->where('id', '=', $sales_id);
+            $saleUser = json_decode($query->get(), true);
+            $salesName = $saleUser[0]['name'];
+
             $query = DB::table('items');
             $itemList = json_decode($query->get(), true);
 
@@ -45,15 +49,22 @@ class UserController extends Controller
 
             $commissionList = json_decode($query->get(), true);
 
-
             $query = DB::table('records')
-                ->where("sales", '=', $sales_id)
-                ->whereBetween("created_at", [$from, $to]);
+                ->select('records.id as id', 'records.name', 'records.iccid', 'records.pos', 'records.cm'
+                    , 'records.port_in', 'records.referer', 'records.referer_number', 'records.plan as plan_id',
+                    'items.name as plan', DB::raw('DATE(records.created_at) as created_at'), 'records.status')
 
-            $data = json_decode($query->get(), true);
+                ->join('items', 'records.plan', '=', 'items.id')
+                ->where("sales", '=', $sales_id)
+                ->where("status", '!=', 'canceled')
+                ->whereBetween("records.created_at", [$from, $to])
+                ->orderBy('records.created_at', 'ASC');
+            $recordData = json_decode($query->get(), true);
+
+//            print_r($recordData);die;
 
             $dateCategorizedDate = [];
-            foreach ($data as $record) {
+            foreach ($recordData as $record) {
                 $date = $record['created_at'];
                 $date=date_create($date);
                 $parsedDate = date_format($date, 'Y-m-d');
@@ -66,10 +77,10 @@ class UserController extends Controller
             foreach ($dateCategorizedDate as $dateRecord) {
                 $itemCount = count($dateRecord);
                 foreach ($dateRecord as $item) {
-                    $planId = $item['plan'];
+                    $planId = $item['plan_id'];
                     $commissionBonus = $this->fetchCommissionBonus($commissionList, $planId);
-                    $commission = $commissionBonus[0];
-                    $bonus = $commissionBonus[1];
+                    $commission = (float)$commissionBonus[0];
+                    $bonus = (float)$commissionBonus[1];
 
                     if (!isset($total[$planId]['count'])) {
                         $total[$planId]['count'] = 1;
@@ -136,8 +147,10 @@ class UserController extends Controller
                 $result[] = $tmp;
             }
             $data = [];
+            $data['recordData'] = $recordData;
             $data['records'] = $result;
             $data['total'] = $commissionAmount;
+            $data['salesName'] = $salesName;
 
             return $data;
         }

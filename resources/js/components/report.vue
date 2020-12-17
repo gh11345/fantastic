@@ -8,7 +8,10 @@
                             <h4 class="card-title">Commission Report</h4>
                             <p class="card-category">Select a sales and time range to generate report</p>
                         </div>
-                        <div class="card-body printTable">
+                        <div class="card-body printTable" id="printHere">
+                            <button type="button"  class="btn btn-success print-button" style="float: right" v-on:click="print">
+                                <i class="material-icons">print</i>
+                            </button>
                             <div class="search-bar">
                                 <div class="md-layout md-gutter">
                                     <div class="md-layout-item md-size-25">
@@ -41,6 +44,26 @@
                             </div>
                             <div class="table-responsive ">
                                 <table class="table commissionTable" id="printTable">
+                                    <thead class=" text-primary">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>ICCID</th>
+                                            <th>CM</th>
+                                            <th>PORT IN #</th>
+                                            <th>PLAN</th>
+                                            <th>DATE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="search-bar">
+                                        <tr v-for="record in recordData">
+                                            <td>{{record.name}}</td>
+                                            <td>{{record.iccid}}</td>
+                                            <td>{{record.cm}}</td>
+                                            <td>{{record.port_in}}</td>
+                                            <td>{{record.plan}}</td>
+                                            <td>{{record.created_at}}</td>
+                                        </tr>
+                                    </tbody>
                                     <thead class=" text-primary">
 
                                     <tr>
@@ -138,11 +161,13 @@
             return {
                 employee: [],
                 records: [],
+                recordData: [],
                 sales: '',
-                sales_id: '',
-                dateTo: '',
-                dateFrom: '',
-                total: ''
+                sales_id: '6',
+                dateTo: '2020-12-31',
+                dateFrom: '2020-12-01',
+                total: '',
+                salesName: ''
             }
         },
         methods: {
@@ -172,22 +197,23 @@
                 }.bind(this));
             },
             print() {
-                var filename = "sales_id_"+this.sales_id+"_"+this.dateFrom+"_"+this.dateTo+".pdf";
-                var HTML_Width = $(".printTable").width();
-                var HTML_Height = $(".printTable").height();
+                var filename = "sales_"+this.salesName+"_"+this.dateFrom+"_"+this.dateTo+".pdf";
+                var HTML_Width = $(".printTable").width()*0.8;
+                var HTML_Height = $(".printTable").height()*0.8;
                 var top_left_margin = 15;
                 var PDF_Width = HTML_Width+(top_left_margin*2);
-                var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+                // var PDF_Height = (PDF_Width*1.2)+(top_left_margin*2);
+                var PDF_Height = HTML_Height
                 var canvas_image_width = HTML_Width;
                 var canvas_image_height = HTML_Height;
 
                 var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
-
+                console.log(totalPDFPages);
 
                 html2canvas($(".printTable")[0],{allowTaint:true}).then(function(canvas) {
                     canvas.getContext('2d');
 
-                    // console.log(canvas.height+"  "+canvas.width);
+                    console.log(canvas.height+"  "+canvas.width);
 
 
                     var imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -195,15 +221,49 @@
                     pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
 
 
-                    for (var i = 1; i <= totalPDFPages; i++) {
-                        pdf.addPage(PDF_Width, PDF_Height);
-                        pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
-                    }
-
-                    console.log(filename);
+                    // for (var i = 1; i <= totalPDFPages; i++) {
+                    //     console.log(-(PDF_Height*i)+(top_left_margin*4));
+                    //     pdf.addPage(PDF_Width, PDF_Height);
+                    //     pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                    //     // pdf.addImage(imgData, 'JPG', top_left_margin, -PDF_Height*i+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                    //     console.log(i);
+                    // }
 
                     pdf.save(filename);
                 });
+                // var quotes = document.getElementById('printHere');
+                // html2canvas(quotes).then((canvas) => {
+                //     var imgData = canvas.toDataURL('image/png');
+                //
+                //     /*
+                //     Here are the numbers (paper width and height) that I found to work.
+                //     It still creates a little overlap part between the pages, but good enough for me.
+                //     if you can find an official number from jsPDF, use them.
+                //     */
+                //     var imgWidth = 210;
+                //     var pageHeight = 295;
+                //     var imgHeight = canvas.height * imgWidth / canvas.width;
+                //     var heightLeft = imgHeight;
+                //
+                //     var doc = new jsPDF('p', 'mm');
+                //     var position = 0;
+                //
+                //     // doc.addPage();
+                //     doc.addImage(imgData, 'PNG', 15, position, imgWidth, 900);
+                //     doc.addImage(imgData, 'PNG', 15, 900, imgWidth, 1800);
+                //
+                //     // doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                //     // heightLeft -= pageHeight;
+                //     //
+                //     // while (heightLeft >= 0) {
+                //     //     position = heightLeft - imgHeight;
+                //     //     doc.addPage();
+                //     //     doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                //     //     heightLeft -= pageHeight;
+                //     // }
+                //     doc.save(filename);
+                //
+                // });
             },
             searchRecords() {
                 var cookie = this.$cookie.get('token');
@@ -228,6 +288,8 @@
                             return;
                         }
                         this.records = response.data.records;
+                        this.recordData = response.data.recordData;
+                        this.salesName = response.data.salesName;
                         this.total = response.data.total;
                         $('.commissionTable').show();
                         $('.print-button').show();
