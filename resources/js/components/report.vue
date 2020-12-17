@@ -8,10 +8,8 @@
                             <h4 class="card-title">Commission Report</h4>
                             <p class="card-category">Select a sales and time range to generate report</p>
                         </div>
+
                         <div class="card-body printTable" id="printHere">
-                            <button type="button"  class="btn btn-success print-button" style="float: right" v-on:click="print">
-                                <i class="material-icons">print</i>
-                            </button>
                             <div class="search-bar">
                                 <div class="md-layout md-gutter">
                                     <div class="md-layout-item md-size-25">
@@ -40,6 +38,12 @@
                                     <div class="md-layout-item md-size-10">
                                         <button class="btn btn-white btn-round btn-just-icon tableForm search" v-on:click="searchRecords"><i class="material-icons">search</i></button>
                                     </div>
+                                    <div class="md-layout-item md-size-10">
+                                        <button type="button"  class="btn btn-success print-button realPrint" style="float:right" v-on:click="print">
+                                            <i class="material-icons">print</i>
+                                        </button>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="table-responsive ">
@@ -95,6 +99,9 @@
                             <button type="button"  class="btn btn-success print-button" style="float: right" v-on:click="print">
                                 <i class="material-icons">print</i>
                             </button>
+                        </div>
+                        <div class="tmp-container">
+
                         </div>
                     </div>
                 </div>
@@ -163,11 +170,13 @@
                 records: [],
                 recordData: [],
                 sales: '',
-                sales_id: '6',
-                dateTo: '2020-12-31',
-                dateFrom: '2020-12-01',
+                sales_id: '',
+                dateTo: '',
+                dateFrom: '',
                 total: '',
-                salesName: ''
+                salesName: '',
+                height: '',
+                container: ''
             }
         },
         methods: {
@@ -196,38 +205,69 @@
                     }
                 }.bind(this));
             },
+            fakePrint() {
+                var content = $('.printTable').clone();
+                $(".tmp-container").html("");
+                $('.tmp-container').html(content);
+                this.container = ".tmp-container";
+                setTimeout(this.print(), 1000)
+                // this.print();
+            },
             print() {
                 var filename = "sales_"+this.salesName+"_"+this.dateFrom+"_"+this.dateTo+".pdf";
-                var HTML_Width = $(".printTable").width()*0.8;
-                var HTML_Height = $(".printTable").height()*0.8;
+
+                if (this.container == '') {
+                    var HTML_Width = $(".printTable").width()*0.8;
+                    var HTML_Height = $(".printTable").height()*0.8;
+                    var container = ".printTable";
+                } else {
+                    var HTML_Width = $(".tmp-container").width()*0.8;
+                    var HTML_Height = $(".tmp-container").height()*0.8;
+                    var container = ".tmp-container";
+                }
+                this.container = '';
                 var top_left_margin = 15;
                 var PDF_Width = HTML_Width+(top_left_margin*2);
-                // var PDF_Height = (PDF_Width*1.2)+(top_left_margin*2);
-                var PDF_Height = HTML_Height
+                var PDF_Height = (PDF_Width*1.2)+(top_left_margin*2);
                 var canvas_image_width = HTML_Width;
                 var canvas_image_height = HTML_Height;
 
                 var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
-                console.log(totalPDFPages);
+                // console.log(totalPDFPages);
+                console.log(container);
 
-                html2canvas($(".printTable")[0],{allowTaint:true}).then(function(canvas) {
+                html2canvas($(container)[0],{allowTaint:true,  scrollX:0, scrollY: -window.scrollY}).then(function(canvas) {
                     canvas.getContext('2d');
 
                     console.log(canvas.height+"  "+canvas.width);
 
 
                     var imgData = canvas.toDataURL("image/jpeg", 1.0);
-                    var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
-                    pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+
+                    if (HTML_Width >= HTML_Height) {
+                        var PDF_Height = (PDF_Width*1.2)+(top_left_margin*2);
+                        var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+                        pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
 
 
-                    // for (var i = 1; i <= totalPDFPages; i++) {
-                    //     console.log(-(PDF_Height*i)+(top_left_margin*4));
-                    //     pdf.addPage(PDF_Width, PDF_Height);
-                    //     pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
-                    //     // pdf.addImage(imgData, 'JPG', top_left_margin, -PDF_Height*i+(top_left_margin*4),canvas_image_width,canvas_image_height);
-                    //     console.log(i);
-                    // }
+                        for (var i = 1; i <= totalPDFPages; i++) {
+                            console.log(-(PDF_Height*i)+(top_left_margin*4));
+                            pdf.addPage(PDF_Width, PDF_Height);
+                            pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                            // pdf.addImage(imgData, 'JPG', top_left_margin, -PDF_Height*i+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                            console.log(i);
+                        }
+                    } else {
+                        var PDF_Height = HTML_Height
+                        var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+                        console.log(PDF_Width);
+                        console.log(PDF_Height);
+                        console.log(canvas_image_width);
+                        console.log(canvas_image_height);
+
+                        pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+                    }
+
 
                     pdf.save(filename);
                 });

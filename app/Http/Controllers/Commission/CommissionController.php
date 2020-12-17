@@ -99,13 +99,24 @@ class CommissionController extends Controller
             $commission = $param['commission'] ?? "";
             $bonus = $param['bonus'] ?? "";
 
+            $query = DB::table('commission')->select('*')
+                ->where('user_id', '=', $name)
+                ->where('items', '=', $item);
+
+            $userCommissionRule = json_decode($query->get(), true);
+
             $commissionRecord = Commission::find($id);
             $commissionRecord->user_id = $name;
-            $commissionRecord->items = $item;
+            if (empty($userCommissionRule)) {
+                $commissionRecord->items = $item;
+            }
+//            $commissionRecord->items = $item;
             $commissionRecord->commission = $commission;
             $commissionRecord->bonus = $bonus;
             $commissionRecord->updated_at = $updatedAt;
             $commissionRecord->save();
+
+
 
             return response()->json([
                 'message' => 'Commission record Updated',
@@ -142,14 +153,25 @@ class CommissionController extends Controller
                     foreach($item as $eachItem) {
 
                         if (!empty($eachItem)) {
-                            Commission::create([
-                                'user_id' => $user_id,
-                                'items' => $eachItem,
-                                'commission' => $commission,
-                                'bonus' => $bonus,
-                                'updated_at' => $updatedAt
-                            ]);
+
+                            $query = DB::table('commission')->select('*')
+                                ->where('user_id', '=', $user_id)
+                                ->where('items', '=', $eachItem);
+
+                            $userCommissionRule = json_decode($query->get(), true);
+
+                            if (empty($userCommissionRule)) {
+                                Commission::create([
+                                    'user_id' => $user_id,
+                                    'items' => $eachItem,
+                                    'commission' => $commission,
+                                    'bonus' => $bonus,
+                                    'updated_at' => $updatedAt
+                                ]);
+                            }
+
                         }
+
 
                     }
                 }
